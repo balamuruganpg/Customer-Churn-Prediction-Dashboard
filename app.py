@@ -4,7 +4,6 @@ ChurnGuard Pro — Premium Customer Churn Prediction Dashboard
 A production-grade Streamlit dashboard with dark glassmorphism theme,
 interactive Plotly visuals, and a live ML prediction pipeline.
 """
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -19,9 +18,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 import warnings
-
 warnings.filterwarnings("ignore")
-
 # ──────────────────────────────────────────────────────────────
 # PAGE CONFIG
 # ──────────────────────────────────────────────────────────────
@@ -31,7 +28,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
 # ──────────────────────────────────────────────────────────────
 # PREMIUM CSS — DARK GLASSMORPHISM THEME
 # ──────────────────────────────────────────────────────────────
@@ -39,7 +35,6 @@ st.markdown("""
 <style>
 /* ── Google Fonts ── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
-
 /* ── Root variables ── */
 :root {
     --bg-primary:    #0a0e1a;
@@ -62,14 +57,12 @@ st.markdown("""
     --font:          'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --mono:          'JetBrains Mono', monospace;
 }
-
 /* ── Global body ── */
 html, body, [data-testid="stAppViewContainer"] {
     background: var(--bg-primary) !important;
     color: var(--text-primary) !important;
     font-family: var(--font) !important;
 }
-
 /* Animated gradient mesh background */
 [data-testid="stAppViewContainer"]::before {
     content: "";
@@ -82,7 +75,6 @@ html, body, [data-testid="stAppViewContainer"] {
     pointer-events: none;
     z-index: 0;
 }
-
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0f1629 0%, #111827 100%) !important;
@@ -115,21 +107,18 @@ html, body, [data-testid="stAppViewContainer"] {
 [data-testid="stSidebar"] .stRadio > div [data-checked="true"] {
     background: rgba(99,102,241,0.15) !important;
 }
-
 /* ── Header / top bar ── */
 header[data-testid="stHeader"] {
     background: rgba(10,14,26,0.85) !important;
     backdrop-filter: blur(12px) !important;
     border-bottom: 1px solid var(--glass-border) !important;
 }
-
 /* ── Main container spacing ── */
 .block-container {
     padding-top: 2rem !important;
     padding-bottom: 2rem !important;
     max-width: 1280px !important;
 }
-
 /* ── Glass card ── */
 .glass-card {
     background: var(--bg-card);
@@ -145,7 +134,6 @@ header[data-testid="stHeader"] {
     transform: translateY(-4px);
     box-shadow: 0 16px 48px rgba(99,102,241,0.12), var(--glass-shadow);
 }
-
 /* ── KPI card ── */
 .kpi-card {
     background: var(--bg-card);
@@ -175,7 +163,6 @@ header[data-testid="stHeader"] {
 .kpi-card.purple::before  { background: linear-gradient(90deg, var(--purple), var(--rose)); }
 .kpi-card.cyan::before    { background: linear-gradient(90deg, var(--cyan), var(--indigo)); }
 .kpi-card.rose::before    { background: linear-gradient(90deg, var(--rose), var(--amber)); }
-
 .kpi-icon { font-size: 2rem; margin-bottom: 8px; }
 .kpi-value {
     font-size: 2rem; font-weight: 800;
@@ -190,7 +177,6 @@ header[data-testid="stHeader"] {
     letter-spacing: 0.8px;
     margin-top: 6px;
 }
-
 /* ── Metric card (model performance) ── */
 .metric-card {
     background: var(--bg-card);
@@ -214,7 +200,6 @@ header[data-testid="stHeader"] {
     letter-spacing: 0.8px;
     margin-top: 6px;
 }
-
 /* ── Risk badge ── */
 .risk-badge {
     display: inline-block;
@@ -227,7 +212,6 @@ header[data-testid="stHeader"] {
 .risk-low    { background: rgba(52,211,153,0.15); color: var(--emerald); border: 1px solid rgba(52,211,153,0.3); }
 .risk-medium { background: rgba(251,191,36,0.15); color: var(--amber);  border: 1px solid rgba(251,191,36,0.3); }
 .risk-high   { background: rgba(251,113,133,0.15);color: var(--rose);   border: 1px solid rgba(251,113,133,0.3); }
-
 /* ── Probability ring ── */
 .prob-ring {
     width: 180px; height: 180px;
@@ -245,7 +229,6 @@ header[data-testid="stHeader"] {
 }
 .prob-pct { font-size: 2.2rem; font-weight: 800; }
 .prob-lbl { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
-
 /* ── Section header ── */
 .section-header {
     font-size: 1.6rem; font-weight: 800;
@@ -258,7 +241,6 @@ header[data-testid="stHeader"] {
     color: var(--text-secondary);
     margin-bottom: 24px;
 }
-
 /* ── Insight chip ── */
 .insight-chip {
     background: rgba(99,102,241,0.08);
@@ -270,20 +252,17 @@ header[data-testid="stHeader"] {
     color: var(--text-primary);
     line-height: 1.5;
 }
-
 /* ── Plotly chart backgrounds ── */
 .stPlotlyChart {
     border-radius: var(--radius) !important;
     overflow: hidden;
 }
-
 /* ── Dataframe styling ── */
 [data-testid="stDataFrame"] {
     border-radius: var(--radius) !important;
     overflow: hidden;
     border: 1px solid var(--glass-border) !important;
 }
-
 /* ── Buttons & inputs ── */
 .stButton > button {
     background: linear-gradient(135deg, var(--indigo-bright), var(--purple)) !important;
@@ -300,7 +279,6 @@ header[data-testid="stHeader"] {
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 24px rgba(99,102,241,0.45) !important;
 }
-
 .stSelectbox, .stMultiSelect, .stNumberInput, .stTextInput {
     font-family: var(--font) !important;
 }
@@ -313,7 +291,6 @@ header[data-testid="stHeader"] {
     border: 1px solid var(--glass-border) !important;
     border-radius: 10px !important;
 }
-
 /* ── Tabs ── */
 .stTabs [data-baseweb="tab-list"] {
     gap: 4px;
@@ -330,10 +307,8 @@ header[data-testid="stHeader"] {
     background: rgba(99,102,241,0.15) !important;
     color: var(--indigo) !important;
 }
-
 /* ── Divider ── */
 hr { border-color: var(--glass-border) !important; }
-
 /* ── Recommendation box ── */
 .rec-box {
     background: var(--bg-card);
@@ -346,13 +321,11 @@ hr { border-color: var(--glass-border) !important; }
 .rec-box.low    { border-left-color: var(--emerald); }
 .rec-box.medium { border-left-color: var(--amber); }
 .rec-box.high   { border-left-color: var(--rose); }
-
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
-
 /* ── Brand badge ── */
 .brand-badge {
     display: flex; align-items: center; gap: 12px;
@@ -368,7 +341,6 @@ hr { border-color: var(--glass-border) !important; }
 }
 .brand-text { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
 .brand-sub  { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
-
 /* ── Logo line ── */
 .sidebar-divider {
     height: 1px;
@@ -377,8 +349,6 @@ hr { border-color: var(--glass-border) !important; }
 }
 </style>
 """, unsafe_allow_html=True)
-
-
 # ──────────────────────────────────────────────────────────────
 # PLOTLY THEME HELPER
 # ──────────────────────────────────────────────────────────────
@@ -400,10 +370,7 @@ PLOTLY_LAYOUT = dict(
     xaxis=dict(gridcolor="rgba(99,102,241,0.07)", zerolinecolor="rgba(99,102,241,0.1)"),
     yaxis=dict(gridcolor="rgba(99,102,241,0.07)", zerolinecolor="rgba(99,102,241,0.1)"),
 )
-
 COLORS = ["#818cf8", "#34d399", "#c084fc", "#22d3ee", "#fb7185", "#fbbf24", "#a78bfa", "#6ee7b7"]
-
-
 # ──────────────────────────────────────────────────────────────
 # DATA & MODEL LOADING
 # ──────────────────────────────────────────────────────────────
@@ -411,28 +378,22 @@ COLORS = ["#818cf8", "#34d399", "#c084fc", "#22d3ee", "#fb7185", "#fbbf24", "#a7
 def load_data():
     df = pd.read_csv("Telco-Customer-Churn.csv")
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-    df["TotalCharges"].fillna(df["TotalCharges"].median(), inplace=True)
+    df["TotalCharges"] = df["TotalCharges"].fillna(df["TotalCharges"].median())
     return df
-
-
 @st.cache_resource
 def load_model():
     model = joblib.load("churn_prediction_model.pkl")
     features = joblib.load("model_features.pkl")
     return model, features
-
-
 @st.cache_data
 def prepare_model_data(df):
     """Replicate notebook preprocessing so we can evaluate metrics."""
     data = df.copy()
     data.drop("customerID", axis=1, inplace=True)
     data["Churn"] = data["Churn"].map({"Yes": 1, "No": 0})
-
     binary_cols = ["gender", "Partner", "Dependents", "PhoneService", "PaperlessBilling"]
     for col in binary_cols:
         data[col] = LabelEncoder().fit_transform(data[col])
-
     data = pd.get_dummies(
         data,
         columns=[
@@ -442,12 +403,9 @@ def prepare_model_data(df):
         ],
         drop_first=True,
     )
-
     X = data.drop("Churn", axis=1)
     y = data["Churn"]
     return X, y
-
-
 # ──────────────────────────────────────────────────────────────
 # LOAD EVERYTHING
 # ──────────────────────────────────────────────────────────────
@@ -462,7 +420,6 @@ try:
 except Exception as e:
     DATA_LOADED = False
     st.error(f"⚠️ Error loading data or model: {e}")
-
 # ──────────────────────────────────────────────────────────────
 # SIDEBAR
 # ──────────────────────────────────────────────────────────────
@@ -477,7 +434,6 @@ with st.sidebar:
     </div>
     <div class="sidebar-divider"></div>
     """, unsafe_allow_html=True)
-
     page = st.radio(
         "NAVIGATION",
         [
@@ -489,7 +445,6 @@ with st.sidebar:
         ],
         label_visibility="collapsed",
     )
-
     st.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
     st.markdown(
         f"""
@@ -510,29 +465,24 @@ with st.sidebar:
         """,
         unsafe_allow_html=True,
     )
-
 if not DATA_LOADED:
     st.stop()
-
-
 # ══════════════════════════════════════════════════════════════
 # 1. OVERVIEW DASHBOARD
 # ══════════════════════════════════════════════════════════════
 if page == "📊  Overview Dashboard":
     st.markdown('<p class="section-header">Overview Dashboard</p>', unsafe_allow_html=True)
     st.markdown('<p class="section-sub">Key performance metrics and churn distribution at a glance</p>', unsafe_allow_html=True)
-
     total      = len(df)
     churned    = (df["Churn"] == "Yes").sum()
     churn_rate = churned / total * 100
     avg_tenure = df["tenure"].mean()
     avg_monthly= df["MonthlyCharges"].mean()
-
     # High-risk: predict on all data
     X_full_aligned = X_all.reindex(columns=model_features, fill_value=0)
+    X_full_aligned = X_full_aligned.fillna(0).replace([np.inf, -np.inf], 0)
     probas = model.predict_proba(X_full_aligned)[:, 1]
     high_risk = (probas >= 0.7).sum()
-
     # ── KPI Cards ──
     k1, k2, k3, k4, k5 = st.columns(5)
     cards = [
@@ -550,12 +500,9 @@ if page == "📊  Overview Dashboard":
             <div class="kpi-label">{label}</div>
         </div>
         """, unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
-
     # ── Charts row ──
     col_pie, col_insight = st.columns([1, 1])
-
     with col_pie:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         churn_counts = df["Churn"].value_counts()
@@ -584,17 +531,14 @@ if page == "📊  Overview Dashboard":
         )
         st.plotly_chart(fig_pie, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
     with col_insight:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         st.markdown('<div style="font-size:1.1rem;font-weight:700;margin-bottom:16px;color:var(--text-primary);">📌 Key Business Insights</div>', unsafe_allow_html=True)
-
         mtm_churn  = df[df["Contract"] == "Month-to-month"]["Churn"].value_counts(normalize=True).get("Yes", 0) * 100
         fiber_churn= df[df["InternetService"] == "Fiber optic"]["Churn"].value_counts(normalize=True).get("Yes", 0) * 100
         echeck_churn = df[df["PaymentMethod"] == "Electronic check"]["Churn"].value_counts(normalize=True).get("Yes", 0) * 100
         short_tenure = df[df["tenure"] <= 12]["Churn"].value_counts(normalize=True).get("Yes", 0) * 100
         senior_churn = df[df["SeniorCitizen"] == 1]["Churn"].value_counts(normalize=True).get("Yes", 0) * 100
-
         insights = [
             f"🔴 **Month-to-month** contracts have a **{mtm_churn:.1f}%** churn rate — the highest among all contract types.",
             f"🔴 **Fiber optic** internet users churn at **{fiber_churn:.1f}%** — significantly higher than DSL or no internet.",
@@ -604,9 +548,7 @@ if page == "📊  Overview Dashboard":
         ]
         for ins in insights:
             st.markdown(f'<div class="insight-chip">{ins}</div>', unsafe_allow_html=True)
-
         st.markdown("</div>", unsafe_allow_html=True)
-
     # ── Monthly charges distribution ──
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
@@ -625,33 +567,26 @@ if page == "📊  Overview Dashboard":
     )
     st.plotly_chart(fig_dist, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
-
-
 # ══════════════════════════════════════════════════════════════
 # 2. EXPLORATORY ANALYSIS
 # ══════════════════════════════════════════════════════════════
 elif page == "📈  Exploratory Analysis":
     st.markdown('<p class="section-header">Exploratory Analysis</p>', unsafe_allow_html=True)
     st.markdown('<p class="section-sub">Dive deep into the data with interactive visualizations</p>', unsafe_allow_html=True)
-
     # ── Filters ──
     with st.expander("🎛️  Filters", expanded=False):
         fc1, fc2, fc3 = st.columns(3)
         gender_filter   = fc1.multiselect("Gender", df["gender"].unique(), default=df["gender"].unique())
         contract_filter = fc2.multiselect("Contract", df["Contract"].unique(), default=df["Contract"].unique())
         internet_filter = fc3.multiselect("Internet Service", df["InternetService"].unique(), default=df["InternetService"].unique())
-
     filtered = df[
         (df["gender"].isin(gender_filter)) &
         (df["Contract"].isin(contract_filter)) &
         (df["InternetService"].isin(internet_filter))
     ]
-
     st.markdown(f'<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;">Showing <b style="color:var(--indigo)">{len(filtered):,}</b> of {len(df):,} customers</div>', unsafe_allow_html=True)
-
     # Row 1: Contract & Internet Service
     r1c1, r1c2 = st.columns(2)
-
     with r1c1:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         ct = filtered.groupby(["Contract", "Churn"]).size().reset_index(name="Count")
@@ -664,7 +599,6 @@ elif page == "📈  Exploratory Analysis":
         fig_ct.update_layout(**PLOTLY_LAYOUT, height=380)
         st.plotly_chart(fig_ct, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
     with r1c2:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         it = filtered.groupby(["InternetService", "Churn"]).size().reset_index(name="Count")
@@ -677,12 +611,9 @@ elif page == "📈  Exploratory Analysis":
         fig_it.update_layout(**PLOTLY_LAYOUT, height=380)
         st.plotly_chart(fig_it, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
-
     # Row 2: Payment Method & Scatter
     r2c1, r2c2 = st.columns(2)
-
     with r2c1:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         pm = filtered.groupby(["PaymentMethod", "Churn"]).size().reset_index(name="Count")
@@ -696,7 +627,6 @@ elif page == "📈  Exploratory Analysis":
         fig_pm.update_layout(**PLOTLY_LAYOUT, height=400)
         st.plotly_chart(fig_pm, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
     with r2c2:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         scatter_sample = filtered.sample(min(1500, len(filtered)), random_state=42)
@@ -710,9 +640,7 @@ elif page == "📈  Exploratory Analysis":
         fig_sc.update_traces(marker=dict(size=6, line=dict(width=0.5, color="#0a0e1a")))
         st.plotly_chart(fig_sc, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
-
     # Row 3: Tenure distribution
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     fig_ten = go.Figure()
@@ -729,26 +657,22 @@ elif page == "📈  Exploratory Analysis":
     )
     st.plotly_chart(fig_ten, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
-
-
 # ══════════════════════════════════════════════════════════════
 # 3. MODEL PERFORMANCE
 # ══════════════════════════════════════════════════════════════
 elif page == "🤖  Model Performance":
     st.markdown('<p class="section-header">Model Performance</p>', unsafe_allow_html=True)
     st.markdown('<p class="section-sub">Gradient Boosting Classifier evaluation on the held-out test set</p>', unsafe_allow_html=True)
-
     # Predict
     X_test_aligned = X_test.reindex(columns=model_features, fill_value=0)
+    X_test_aligned = X_test_aligned.fillna(0).replace([np.inf, -np.inf], 0)
     y_pred  = model.predict(X_test_aligned)
     y_proba = model.predict_proba(X_test_aligned)[:, 1]
-
     acc  = accuracy_score(y_test, y_pred)
     prec = precision_score(y_test, y_pred)
     rec  = recall_score(y_test, y_pred)
     f1   = f1_score(y_test, y_pred)
     auc  = roc_auc_score(y_test, y_proba)
-
     # ── Metric cards ──
     m1, m2, m3, m4, m5 = st.columns(5)
     metrics = [
@@ -765,12 +689,9 @@ elif page == "🤖  Model Performance":
             <div class="metric-lbl">{lbl}</div>
         </div>
         """, unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
-
     # ── Confusion Matrix & ROC ──
     cm_col, roc_col = st.columns(2)
-
     with cm_col:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         cm = confusion_matrix(y_test, y_pred)
@@ -789,7 +710,6 @@ elif page == "🤖  Model Performance":
         )
         st.plotly_chart(fig_cm, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
     with roc_col:
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         fpr, tpr, _ = roc_curve(y_test, y_proba)
@@ -813,9 +733,7 @@ elif page == "🤖  Model Performance":
         )
         st.plotly_chart(fig_roc, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
-
     # ── Feature Importance ──
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     if hasattr(model, "feature_importances_"):
@@ -841,47 +759,39 @@ elif page == "🤖  Model Performance":
     else:
         st.info("Feature importances are not available for this model type.")
     st.markdown("</div>", unsafe_allow_html=True)
-
-
 # ══════════════════════════════════════════════════════════════
 # 4. LIVE CHURN PREDICTION
 # ══════════════════════════════════════════════════════════════
 elif page == "🔮  Live Churn Prediction":
     st.markdown('<p class="section-header">Live Churn Prediction</p>', unsafe_allow_html=True)
     st.markdown('<p class="section-sub">Enter customer details to predict churn probability in real time</p>', unsafe_allow_html=True)
-
     with st.container():
         st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         st.markdown('<div style="font-size:1rem;font-weight:700;margin-bottom:18px;color:var(--text-primary);">🧾 Customer Information</div>', unsafe_allow_html=True)
-
         # Row 1
         c1, c2, c3, c4 = st.columns(4)
         gender           = c1.selectbox("Gender", ["Male", "Female"])
         senior           = c2.selectbox("Senior Citizen", ["No", "Yes"])
         partner          = c3.selectbox("Partner", ["No", "Yes"])
         dependents       = c4.selectbox("Dependents", ["No", "Yes"])
-
         # Row 2
         c5, c6, c7, c8 = st.columns(4)
         tenure           = c5.number_input("Tenure (months)", 0, 72, 12)
         monthly          = c6.number_input("Monthly Charges ($)", 18.0, 120.0, 70.0, step=0.5)
         total_charges    = c7.number_input("Total Charges ($)", 0.0, 9000.0, float(tenure * monthly), step=10.0)
         phone_service    = c8.selectbox("Phone Service", ["No", "Yes"])
-
         # Row 3
         c9, c10, c11, c12 = st.columns(4)
         multiple_lines   = c9.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
         internet         = c10.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
         online_security  = c11.selectbox("Online Security", ["No", "Yes", "No internet service"])
         online_backup    = c12.selectbox("Online Backup", ["No", "Yes", "No internet service"])
-
         # Row 4
         c13, c14, c15, c16 = st.columns(4)
         device_protection= c13.selectbox("Device Protection", ["No", "Yes", "No internet service"])
         tech_support     = c14.selectbox("Tech Support", ["No", "Yes", "No internet service"])
         streaming_tv     = c15.selectbox("Streaming TV", ["No", "Yes", "No internet service"])
         streaming_movies = c16.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
-
         # Row 5
         c17, c18 = st.columns(2)
         contract         = c17.selectbox("Contract", ["Month-to-month", "One year", "Two year"])
@@ -889,18 +799,13 @@ elif page == "🔮  Live Churn Prediction":
             "Electronic check", "Mailed check",
             "Bank transfer (automatic)", "Credit card (automatic)",
         ])
-
         paperless = st.selectbox("Paperless Billing", ["No", "Yes"])
-
         st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
-
     # ── Predict Button ──
     if st.button("🔮  Predict Churn", use_container_width=True):
         # Build raw dict
         le_map = {"Male": 1, "Female": 0, "Yes": 1, "No": 0}
-
         input_dict = {
             "gender":           le_map[gender],
             "SeniorCitizen":    1 if senior == "Yes" else 0,
@@ -943,13 +848,11 @@ elif page == "🔮  Live Churn Prediction":
             "PaymentMethod_Electronic check":        1 if payment == "Electronic check" else 0,
             "PaymentMethod_Mailed check":            1 if payment == "Mailed check" else 0,
         }
-
         input_df = pd.DataFrame([input_dict]).reindex(columns=model_features, fill_value=0)
-
+        input_df = input_df.fillna(0).replace([np.inf, -np.inf], 0)
         try:
             prob = model.predict_proba(input_df)[0][1]
             pct  = prob * 100
-
             if pct < 30:
                 risk, risk_cls, ring_color = "Low Risk", "risk-low", "#34d399"
                 rec_cls = "low"
@@ -968,11 +871,9 @@ elif page == "🔮  Live Churn Prediction":
                 rec_msg = ("🚨 <b>Immediate intervention required.</b> This customer is highly likely "
                            "to churn. Deploy your best retention offer — consider a significant discount, "
                            "complimentary service upgrade, or a dedicated account manager.")
-
             # ── Result display ──
             st.markdown("<br>", unsafe_allow_html=True)
             res1, res2, res3 = st.columns([1, 1, 1])
-
             with res1:
                 st.markdown(f"""
                 <div class="glass-card" style="text-align:center;">
@@ -984,7 +885,6 @@ elif page == "🔮  Live Churn Prediction":
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-
             with res2:
                 st.markdown(f"""
                 <div class="glass-card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:230px;">
@@ -995,7 +895,6 @@ elif page == "🔮  Live Churn Prediction":
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-
             with res3:
                 st.markdown(f"""
                 <div class="glass-card" style="display:flex;flex-direction:column;justify-content:center;min-height:230px;">
@@ -1005,25 +904,20 @@ elif page == "🔮  Live Churn Prediction":
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-
         except Exception as e:
             st.error(f"Prediction failed: {e}")
-
-
 # ══════════════════════════════════════════════════════════════
 # 5. CUSTOMER EXPLORER
 # ══════════════════════════════════════════════════════════════
 elif page == "🔍  Customer Explorer":
     st.markdown('<p class="section-header">Customer Explorer</p>', unsafe_allow_html=True)
     st.markdown('<p class="section-sub">Search and filter customer records with ease</p>', unsafe_allow_html=True)
-
     # ── Search & Filters ──
     s1, s2, s3, s4 = st.columns([2, 1, 1, 1])
     search_term     = s1.text_input("🔎 Search by Customer ID", placeholder="e.g. 7590-VHVEG")
     churn_filter    = s2.selectbox("Churn Status", ["All", "Yes", "No"])
     contract_f      = s3.selectbox("Contract Type", ["All"] + list(df["Contract"].unique()))
     internet_f      = s4.selectbox("Internet Service", ["All"] + list(df["InternetService"].unique()))
-
     explore_df = df.copy()
     if search_term:
         explore_df = explore_df[explore_df["customerID"].str.contains(search_term, case=False, na=False)]
@@ -1033,7 +927,6 @@ elif page == "🔍  Customer Explorer":
         explore_df = explore_df[explore_df["Contract"] == contract_f]
     if internet_f != "All":
         explore_df = explore_df[explore_df["InternetService"] == internet_f]
-
     st.markdown(f"""
     <div style="display:flex;gap:16px;margin-bottom:16px;">
         <div class="insight-chip" style="flex:1;text-align:center;">
@@ -1054,7 +947,6 @@ elif page == "🔍  Customer Explorer":
         </div>
     </div>
     """, unsafe_allow_html=True)
-
     st.dataframe(
         explore_df,
         use_container_width=True,
@@ -1067,7 +959,6 @@ elif page == "🔍  Customer Explorer":
             "Churn": st.column_config.TextColumn("Churn"),
         },
     )
-
 # ──────────────────────────────────────────────────────────────
 # FOOTER
 # ──────────────────────────────────────────────────────────────
